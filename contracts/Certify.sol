@@ -8,9 +8,9 @@ contract Certifyi is Ownable {
   
   
 
-  event LogNotarized(bytes32 indexed record, address indexed certifier, uint256 timestamp);
+  event LogCertified(bytes32 indexed record, address indexed certifier, uint256 timestamp);
 
-  function certify(bytes memory _record) public {
+  function certify(bytes32 _record) public {
     bytes32 hash = keccak256(abi.encodePacked(_record));
     require(hash != keccak256(""));
     require(records[hash] == address(0));
@@ -18,7 +18,7 @@ contract Certifyi is Ownable {
     records[hash] = msg.sender;
     timestamps[hash] = block.timestamp;
 
-    emit LogNotarized(hash, msg.sender, block.timestamp);
+    emit LogCertified(hash, msg.sender, block.timestamp);
   }
 
   function exists(bytes32 _record) view public returns (bool) {
@@ -57,7 +57,6 @@ contract Certifyi is Ownable {
       v := and(mload(add(_sig, 65)), 255)
     }
 
-    // https://github.com/ethereum/go-ethereum/issues/2053
     if (v < 27) {
       v += 27;
     }
