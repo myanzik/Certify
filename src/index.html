@@ -56,8 +56,53 @@
         <input type="text" readonly id="checkDatetime">
       </div>
     </form>
-    
+
+    <form id="genSigForm">
+      <div class="formTitle">
+        Generate Signature to Prove that you Verified this Document
+        <small>You can generate a cryptographic signature of the document to prove that you sign this document and verified it.</small>
+      </div>
+      <div class="input">
+        <label >File <small>The file you verified.</small></label>
+        <input type="file" id="genSigFile">
+      </div>
+      <div>
+        <button type="submit">Generate Signature</button>
+      </div>
+      <div class="formOutput">
+        <label>Signature <small>The cryptographic signature which you can share.</small></label>
+        <input type="text" id="genSigHash" readonly>
+      </div>
+    </form>
+    <form id="verifySigForm">
+      <div class="formTitle">
+        Verify Signature
+        <small>You can verify that the signature signer actually owns that document they claim to own.</small>
+      </div>
+      <div>
+        <label>File <small>Original file to retrieve fingerprint.</small>
+        </label>
+        <input type="file" id="verifySigFile">
+      </div>
+      <div>
+        <label>Signature <small>The signer's provided signature.</small></label>
+        <input type="text" id="verifySigInput">
+      </div>
+      <div>
+        <button type="submit">check signer of this document</button>
+      </div>
+      <div class="formOutput">
+        <output id="verifySigOut"></output>
+      </div>
+    </form>
   </div>
+
+  <div id="events">
+    <div class="eventsTitle">Events</div>
+    <ul id="eventsLog"></ul>
+  </div>
+    
+
  
   
 

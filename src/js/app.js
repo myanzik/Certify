@@ -14,10 +14,10 @@ let account = null
 let network = 'localhost' //by default
 
 let addresses = {
-  localhost: '0xaACe50E4D1cacccD95B804B9bC2B2912b6798C52',
+  localhost: '0x972cF7baFE8868d79B31DC62e9B22eC0a2fB203F',
   rinkeby: '',
   kovan: '',
-  ropsten: '0xaACe50E4D1cacccD95B804B9bC2B2912b6798C52',
+  ropsten: '0x972cF7baFE8868d79B31DC62e9B22eC0a2fB203F',
   mainnet: ''
 }
 
@@ -85,8 +85,8 @@ async function init () {
 
 const stampFileInput = document.querySelector('#stampFile')
 const stampOutHash = document.querySelector('#stampHash')
-const stampForm = document.querySelector('#stampForm')
 
+const stampForm = document.querySelector('#stampForm')
 stampFileInput.addEventListener('change', handleStampFile, false)
 stampForm.addEventListener('submit', handleStampForm, false)
 
@@ -189,85 +189,89 @@ async function handleCheckForm (event) {
 }
 
 
-//Sign the Certified Document
+//Sign the Document to verify it 
 
-// const genSigForm = document.querySelector('#genSigForm')
-// const genSigFile = document.querySelector('#genSigFile')
-// const genSigHash = document.querySelector('#genSigHash')
-// genSigForm.addEventListener('submit', handleGenSigForm, false)
+const genSigForm = document.querySelector('#genSigForm')
+const genSigFile = document.querySelector('#genSigFile')
+const genSigHash = document.querySelector('#genSigHash')
+genSigForm.addEventListener('submit', handleGenSigForm, false)
 
-// async function handleGenSigForm (event) {
-//   event.preventDefault()
+async function handleGenSigForm (event) {
+  event.preventDefault()
 
-//   genSigHash.value = ''
-//   const file = genSigFile.files[0]
-//   const hash = await generateHash.fileToSha3(file)
+  genSigHash.value = ''
+  const file = genSigFile.files[0]
+  const hash = await generateHash.fileToSha3(file)
 
-//   const exists = await instance.exists(hash, {from: account})
+  const exists = await instance.exists(hash, {from: account})
 
-//   if (!exists) {
-//     alert('Please stamp document before generating signature')
-//     return false
-//   }
+  if (!exists) {
+    alert('Please certify document before generating signature')
+    return false
+  }
 
-//   if (!account) {
-//     alert('Please connect MetaMask account set to Rinkeby network')
-//     return false
-//   }
+  if (!account) {
+    alert('Please connect MetaMask account set to Ropsten network')
+    return false
+  }
 
-//   const stamper = await instance.getNotarizer(hash, {from: account})
+  const certifier = await instance.getCertifier(hash, {from: account})
 
-//   if (stamper !== account) {
-//     alert('You are not the stamper of this document')
-//     return false
-//   }
+  // if (certifier !== account) {
+  //   alert('You are not the stamper of this document')
+  //   return false
+  // }
 
-//   web3.eth.sign(account, hash, (error, sig) => {
-//     genSigHash.value = sig
-//   });
-// }
+  web3.eth.sign(account, hash, (error, sig) => {
+    console.log(account);
+    genSigHash.value = sig
+  });
+}
 
 
-// //Verify Signature
+//Verify Signature
 
-// const verifySigForm = document.querySelector('#verifySigForm')
-// const verifySigFile = document.querySelector('#verifySigFile')
-// const verifySigInput = document.querySelector('#verifySigInput')
-// const verifySigOut = document.querySelector('#verifySigOut')
-// verifySigForm.addEventListener('submit', handleVerifySigForm, false)
+const verifySigForm = document.querySelector('#verifySigForm')
+const verifySigFile = document.querySelector('#verifySigFile')
+const verifySigInput = document.querySelector('#verifySigInput')
+const verifySigOut = document.querySelector('#verifySigOut')
+verifySigForm.addEventListener('submit', handleVerifySigForm, false)
 
-// async function handleVerifySigForm (event) {
-//   event.preventDefault()
+async function handleVerifySigForm (event) {
+  event.preventDefault()
 
-//   verifySigOut.innerHTML = ''
-//   const file = verifySigFile.files[0]
+  verifySigOut.innerHTML = ''
+  const file = verifySigFile.files[0]
 
-//   const hash = await generateHash.fileToSha3(file)
-//   const sig = verifySigInput.value
+  const hash = await generateHash.fileToSha3(file)
+  const sig = verifySigInput.value
 
-//   const exists = await instance.exists(hash, {from: account})
+  const exists = await instance.exists(hash, {from: account})
 
-//   if (!exists) {
-//     alert('There is no record for this document')
-//     return false
-//   }
+  if (!exists) {
+    alert('There is no record for this document')
+    return false
+  }
 
-//   if (!sig) {
-//     alert('Please input signature string')
-//     return false
-//   }
+  if (!sig) {
+    alert('Please input signature string')
+    return false
+  }
 
-//   const addr = await instance.getNotarizer(hash)
-//   const isSigner = await instance.ecverify(hash, sig, addr, {from: account})
+  const addr = await instance.getCertifier(hash)
+  const signer = await instance.ecrecovery(hash,sig,{from : account})
+  const isSigner = await instance.ecverify(hash, sig, addr, {from: account})
 
-//   let output = `<span class="red">✘ ${addr} <strong>IS NOT</strong> signer of ${hash}</span>`
+  // let output = `<span class="red">XXX ${addr} <br/> <strong>IS NOT</strong><br/> signer of ${hash}</span>`
 
-//   if (isSigner) {
-//     output = `<span class="green">✔ ${addr} <strong>IS</strong> signer of ${hash}</span>`
-//   }
+  // if (isSigner) {
+  //   output = `<span class="green"> ${addr} <br/> <strong>IS</strong> <br/> signer of ${hash}</span>`
+  // }
 
-//   verifySigOut.innerHTML = output
-// }
+  let output = `<span class="green">address= ${signer} <br/> <strong>IS</strong><br/> signer of ${hash}</span>`
+
+  verifySigOut.innerHTML = output
+}
 
 
 
