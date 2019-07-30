@@ -79,7 +79,15 @@ async function init () {
   if (!window.web3) {
     window.web3 = new window.Web3(provider)
   }
+
 }
+
+window.ethereum.on('accountsChanged', async function (accounts) {
+  console.log(accounts);
+  account = await watchProvider.getAccount()
+})
+
+
 
 //Certify your Document
 

@@ -74668,8 +74668,12 @@ async function init() {
   if (!window.web3) {
     window.web3 = new window.Web3(provider);
   }
-} //Certify your Document
+}
 
+window.ethereum.on('accountsChanged', async function (accounts) {
+  console.log(accounts);
+  account = await watchProvider.getAccount();
+}); //Certify your Document
 
 const stampFileInput = document.querySelector('#stampFile');
 const stampOutHash = document.querySelector('#stampHash');
