@@ -1,11 +1,9 @@
 const truffleContract = require('truffle-contract');
 const moment = require('moment');
-const detectNetwork = require('web3-detect-network');
+
 const watchProvider = require('./provider.helper');
 const generateHash = require('./hash.helper');
-const wait = require('promise-wait');
-const arrayBufferToBuffer = require('arraybuffer-to-buffer');
-const {sha3} = require('ethereumjs-util');
+
 
 const source = require('../../build/contracts/Certifyi.json');
 
